@@ -7,9 +7,43 @@
 <head>
     <meta charset="utf-8" />
     <title>The World - @ViewBag.Title</title>
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <h2>The World</h2>
-    <p>This will be a fun website! Maybe</p>
+    <div id="sidebar">
+        <img src="~/img/headshot.png" alt="headshot" class="headshot" />
+        <span class="username">EVA 01</span>
+        <ul class="menu">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+    <div id="wrapper">
+        <div id="main">
+            <div>
+                <button id="sidebarToggle">Toggle Menu</button>
+            </div>
+            <h2>The World</h2>
+            <p>This will be a fun website! Maybe</p>
+
+            <form>
+                <div>
+                    <label>Date</label>
+                    <input />
+                </div>
+                <div>
+                    <label>Location</label>
+                    <input />
+                </div>
+            </form>
+        </div>
+        <div id="footer">
+            &copy; 2015 World Domination Pizza Delivery, Ltd.
+        </div>
+    </div>
+
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="~/js/site.js"></script>
 </body>
 </html>
