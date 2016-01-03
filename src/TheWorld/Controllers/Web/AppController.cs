@@ -35,8 +35,22 @@ namespace TheWorld.Controllers.Web
         [HttpPost]
         public IActionResult Contact(ContactViewModel model)
         {
-            var email = Startup.Configs["AppSettings:SiteEmailAddress"];
-            mailService.SendMail(email, email, $"Contact Page from {model.Name} ({model.Email})", model.Message);
+            if (ModelState.IsValid)
+            {
+                var email = Startup.Configs["AppSettings:SiteEmailAddress"];
+                if (String.IsNullOrWhiteSpace(email))
+                {
+                    ModelState.AddModelError("", "Error Sending email: server error");
+                    return View();
+                }
+                
+                if (mailService.SendMail(email, email, $"Contact Page from {model.Name} ({model.Email})", model.Message))
+                {
+                    ModelState.Clear();
+                    ViewBag.Message = "Message received!";
+                }
+                
+            }
             return View();
         }
     }
