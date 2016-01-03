@@ -5,16 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using TheWorld.ViewModels;
 using TheWorld.Services;
+using TheWorld.Configs;
+using Microsoft.Extensions.OptionsModel;
 
 namespace TheWorld.Controllers.Web
 {
     public class AppController : Controller
     {
         private IMailService mailService;
+        AppSettings Options { get; }
 
-        public AppController(IMailService service)
+        public AppController(IMailService service, IOptions<AppSettings> optionsAccessor)
         {
             mailService = service;
+            Options = optionsAccessor.Value;
         }
 
         public IActionResult Index()
@@ -37,7 +41,7 @@ namespace TheWorld.Controllers.Web
         {
             if (ModelState.IsValid)
             {
-                var email = Startup.Configs["AppSettings:SiteEmailAddress"];
+                var email = Options.SiteEmailAddress;
                 if (String.IsNullOrWhiteSpace(email))
                 {
                     ModelState.AddModelError("", "Error Sending email: server error");

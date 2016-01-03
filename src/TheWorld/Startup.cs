@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Builder;
+﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TheWorld.Services;
 using Microsoft.Extensions.PlatformAbstractions;
+using TheWorld.Configs;
+using TheWorld.Services;
 
 namespace TheWorld
 {
@@ -30,6 +26,9 @@ namespace TheWorld
         {
             services.AddMvc();
             services.AddScoped<IMailService, DebugMailService>();
+
+            services.AddOptions();
+            services.Configure<AppSettings>(Configs);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

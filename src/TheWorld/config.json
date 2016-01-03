@@ -1,5 +1,4 @@
 ﻿{
-  "AppSettings": {
-    "SiteEmailAddress": "me@aol.com"
-  }
+  /* The App Settings - comments in JSON? Oh my */
+  "SiteEmailAddress": "me@aol.com"
 }
