@@ -35,7 +35,8 @@ namespace TheWorld.Controllers.Web
         [HttpPost]
         public IActionResult Contact(ContactViewModel model)
         {
-            mailService.SendMail("", "", $"Contact Page from {model.Name} ({model.Email})", model.Message);
+            var email = Startup.Configs["AppSettings:SiteEmailAddress"];
+            mailService.SendMail(email, email, $"Contact Page from {model.Name} ({model.Email})", model.Message);
             return View();
         }
     }
