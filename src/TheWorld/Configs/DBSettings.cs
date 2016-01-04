@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace TheWorld.Configs
 {
-    public class AppSettings
+    public class DBSettings
     {
-        public string SiteEmailAddress { get; set; }
-        public DBSettings Data { get; set; }
+        public string WorldContextConnection { get; set; }
     }
 }

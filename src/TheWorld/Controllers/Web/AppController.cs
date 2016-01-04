@@ -7,23 +7,27 @@ using TheWorld.ViewModels;
 using TheWorld.Services;
 using TheWorld.Configs;
 using Microsoft.Extensions.OptionsModel;
+using TheWorld.Models;
 
 namespace TheWorld.Controllers.Web
 {
     public class AppController : Controller
     {
         private IMailService mailService;
+        private WorldContext dbContext;
         AppSettings Options { get; }
 
-        public AppController(IMailService service, IOptions<AppSettings> optionsAccessor)
+        public AppController(IMailService service, IOptions<AppSettings> optionsAccessor, WorldContext dbContext)
         {
             mailService = service;
             Options = optionsAccessor.Value;
+            this.dbContext = dbContext;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var trips = dbContext.Trips.OrderBy(t => t.Name).ToList();
+            return View(trips);
         }
 
         public IActionResult About()
