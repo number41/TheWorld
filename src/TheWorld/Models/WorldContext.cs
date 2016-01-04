@@ -18,6 +18,7 @@ namespace TheWorld.Models
         public WorldContext(IOptions<AppSettings> optionsAccessor)
         {
             Options = optionsAccessor.Value.Data;
+            Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
