@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using TheWorld.Configs;
 using TheWorld.Models;
+using TheWorld.Models.Repos;
 using TheWorld.Services;
 
 namespace TheWorld
@@ -37,6 +38,7 @@ namespace TheWorld
             services.Configure<AppSettings>(Configs);
 
             services.AddTransient<WorldContextSeedData>();
+            services.AddScoped<IWorldRepository, WorldRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
