@@ -35,10 +35,12 @@ namespace TheWorld
 
             services.AddOptions();
             services.Configure<AppSettings>(Configs);
+
+            services.AddTransient<WorldContextSeedData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, WorldContextSeedData seeder)
         {
             app.UseStaticFiles();
             app.UseMvc( config =>
@@ -49,6 +51,8 @@ namespace TheWorld
                     defaults: new { controller = "App", action = "Index" }
                 );
             });
+
+            seeder.EnsureSeedData();
         }
 
         // Entry point for the application.
