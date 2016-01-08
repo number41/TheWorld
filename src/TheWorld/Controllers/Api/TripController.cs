@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNet.Mvc;
+using System.Collections.Generic;
 using System.Net;
+using TheWorld.Models;
 using TheWorld.Models.Repos;
 using TheWorld.ViewModels;
 
@@ -18,20 +21,22 @@ namespace TheWorld.Controllers.Api
         [HttpGet]
         public JsonResult Get()
         {
-            return Json(repo.GetAllTripsWithStops());
+            return Json(Mapper.Map<IEnumerable<TripViewModel>>(repo.GetAllTripsWithStops()));
         }
 
         [HttpPost]
-        public JsonResult Post([FromBody] TripViewModel newTrip)
+        public JsonResult Post([FromBody] TripViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                Response.StatusCode = (int)HttpStatusCode.Created;
-                return Json(true);
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new { Message = "failed", ModelState = ModelState });
             }
 
-            Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            return Json(new { Message = "failed", ModelState = ModelState });
+            var newTrip = Mapper.Map<Trip>(vm);
+            // Save the newTrip to the DB
+            Response.StatusCode = (int)HttpStatusCode.Created;
+            return Json(Mapper.Map<TripViewModel>(newTrip));
         }
     }
 }
