@@ -6,5 +6,7 @@ namespace TheWorld.Models.Repos
     {
         IEnumerable<Trip> GetAllTrips();
         IEnumerable<Trip> GetAllTripsWithStops();
+        bool SaveAll();
+        void AddTrip(Trip newTrip);
     }
 }

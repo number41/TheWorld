@@ -34,9 +34,17 @@ namespace TheWorld.Controllers.Api
             }
 
             var newTrip = Mapper.Map<Trip>(vm);
-            // Save the newTrip to the DB
-            Response.StatusCode = (int)HttpStatusCode.Created;
-            return Json(Mapper.Map<TripViewModel>(newTrip));
+            repo.AddTrip(newTrip);
+
+            if (repo.SaveAll())
+            {
+                Response.StatusCode = (int)HttpStatusCode.Created;
+                return Json(Mapper.Map<TripViewModel>(newTrip));
+            } else
+            {
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return Json(new { Message = "Failed to save to DB" });
+            }
         }
     }
 }

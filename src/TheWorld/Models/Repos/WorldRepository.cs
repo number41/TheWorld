@@ -18,6 +18,12 @@ namespace TheWorld.Models.Repos
             this.logger = logger;
         }
 
+        public void AddTrip(Trip newTrip)
+        {
+
+            dbContext.Add(newTrip);
+        }
+
         public IEnumerable<Trip> GetAllTrips()
         {
             try
@@ -45,6 +51,11 @@ namespace TheWorld.Models.Repos
                 logger.LogError("could not fetch all trips with stops");
                 throw e;
             }
+        }
+
+        public bool SaveAll()
+        {
+            return dbContext.SaveChanges() > 0;
         }
     }
 }
