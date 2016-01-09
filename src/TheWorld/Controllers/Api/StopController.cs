@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using TheWorld.Models;
 using TheWorld.Models.Repos;
 using TheWorld.ViewModels;
 
@@ -21,6 +22,7 @@ namespace TheWorld.Controllers.Api
         {
             this.repo = repo;
             this.logger = logger;
+            logger.LogInformation("Inside StopController ctor");
         }
 
         [HttpGet("")]
@@ -42,6 +44,46 @@ namespace TheWorld.Controllers.Api
                 string msg = $"Failed to get stops for trip {tripName}";
                 logger.LogError(msg, e);
                 Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(msg);
+            }
+        }
+
+        public JsonResult Post(string tripName, [FromBody] StopViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Invalid stop");
+            }
+
+            try
+            {
+                // Map to Entity
+                var newStop = Mapper.Map<Stop>(vm);
+
+                // Looking up Geocoordinates
+                // TODO
+
+                // Save to the database
+                repo.AddStop(tripName, newStop);
+
+                if (repo.SaveAll())
+                {
+                    logger.LogInformation("Saved the trip!");
+                    Response.StatusCode = (int)HttpStatusCode.Created;
+                    return Json(Mapper.Map<StopViewModel>(newStop));
+                }
+                else
+                {
+                    Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    return Json("Failed to save new stop");
+                }
+            }
+            catch (Exception e)
+            {
+                string msg = "Failed to save the new stop";
+                logger.LogError(msg, e);
+                Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return Json(msg);
             }
         }

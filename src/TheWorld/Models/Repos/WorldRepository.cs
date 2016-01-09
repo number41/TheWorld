@@ -18,6 +18,13 @@ namespace TheWorld.Models.Repos
             this.logger = logger;
         }
 
+        public void AddStop(string tripName, Stop newStop)
+        {
+            var theTrip = GetTripByName(tripName);
+            newStop.Order = theTrip.Stops.Max(s => s.Order) + 1;
+            dbContext.Stops.Add(newStop);
+        }
+
         public void AddTrip(Trip newTrip)
         {
 
