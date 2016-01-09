@@ -53,6 +53,14 @@ namespace TheWorld.Models.Repos
             }
         }
 
+        public Trip GetTripByName(string tripName)
+        {
+            return dbContext.Trips
+                .Include(t => t.Stops)
+                .Where(t => t.Name == tripName)
+                .FirstOrDefault();
+        }
+
         public bool SaveAll()
         {
             return dbContext.SaveChanges() > 0;
