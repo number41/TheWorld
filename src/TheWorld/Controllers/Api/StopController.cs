@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using TheWorld.Models;
 using TheWorld.Models.Repos;
+using TheWorld.Services;
 using TheWorld.ViewModels;
 
 namespace TheWorld.Controllers.Api
@@ -15,14 +16,16 @@ namespace TheWorld.Controllers.Api
     [Route("api/trips/{tripName}/stops")]
     public class StopController : Controller
     {
+        private CoordService coordService;
         private ILogger<StopController> logger;
         private IWorldRepository repo;
 
-        public StopController(IWorldRepository repo, ILogger<StopController> logger)
+        public StopController(IWorldRepository repo, ILogger<StopController> logger, CoordService coordService)
         {
             this.repo = repo;
             this.logger = logger;
             logger.LogInformation("Inside StopController ctor");
+            this.coordService = coordService;
         }
 
         [HttpGet("")]
@@ -48,7 +51,7 @@ namespace TheWorld.Controllers.Api
             }
         }
 
-        public JsonResult Post(string tripName, [FromBody] StopViewModel vm)
+        public async Task<JsonResult> Post(string tripName, [FromBody] StopViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -62,7 +65,15 @@ namespace TheWorld.Controllers.Api
                 var newStop = Mapper.Map<Stop>(vm);
 
                 // Looking up Geocoordinates
-                // TODO
+                var coordResult = await coordService.Lookup(newStop.Name);
+                if (!coordResult.Success)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(coordResult.Message);
+                }
+
+                newStop.Latitude = coordResult.Latitude;
+                newStop.Longitude = coordResult.Longitude;
 
                 // Save to the database
                 repo.AddStop(tripName, newStop);

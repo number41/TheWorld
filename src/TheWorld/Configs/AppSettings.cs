@@ -9,5 +9,6 @@ namespace TheWorld.Configs
     {
         public string SiteEmailAddress { get; set; }
         public DBSettings Data { get; set; }
+        public string BingKey { get; set; }
     }
 }

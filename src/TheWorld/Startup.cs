@@ -47,6 +47,7 @@ namespace TheWorld
             services.AddOptions();
             services.Configure<AppSettings>(Configs);
 
+            services.AddScoped<CoordService>();
             services.AddTransient<WorldContextSeedData>();
             services.AddScoped<IWorldRepository, WorldRepository>();
         }
