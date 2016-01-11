@@ -9,6 +9,7 @@ using TheWorld.Configs;
 using Microsoft.Extensions.OptionsModel;
 using TheWorld.Models;
 using TheWorld.Models.Repos;
+using Microsoft.AspNet.Authorization;
 
 namespace TheWorld.Controllers.Web
 {
@@ -26,6 +27,12 @@ namespace TheWorld.Controllers.Web
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Trips()
         {
             var trips = worldRepo.GetAllTrips();
             return View(trips);
