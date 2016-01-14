@@ -72,3 +72,7 @@
 .menu li a {
 	color: #eee;
 }
+
+.field-validation-error {
+    color:#f04124;
+}
