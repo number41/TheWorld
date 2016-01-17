@@ -69,6 +69,23 @@ namespace TheWorld.Models.Repos
                 .FirstOrDefault();
         }
 
+        public IEnumerable<Trip> GetUserTripsWithStops(string name)
+        {
+            try
+            {
+                return dbContext.Trips
+                    .Include(t => t.Stops)
+                    .OrderBy(t => t.Name)
+                    .Where(t => t.UserName == name)
+                    .ToList();
+            }
+            catch (Exception e)
+            {
+                logger.LogError("could not fetch all trips with stops");
+                throw e;
+            }
+        }
+
         public bool SaveAll()
         {
             return dbContext.SaveChanges() > 0;

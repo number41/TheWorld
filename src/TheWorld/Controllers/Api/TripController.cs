@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using System.Collections.Generic;
 using System.Net;
@@ -8,6 +9,7 @@ using TheWorld.ViewModels;
 
 namespace TheWorld.Controllers.Api
 {
+    [Authorize]
     [Route("api/trips")]
     public class TripController : Controller
     {
@@ -21,7 +23,10 @@ namespace TheWorld.Controllers.Api
         [HttpGet]
         public JsonResult Get()
         {
-            return Json(Mapper.Map<IEnumerable<TripViewModel>>(repo.GetAllTripsWithStops()));
+            var trips = repo.GetUserTripsWithStops(User.Identity.Name);
+            var results = Mapper.Map<IEnumerable<TripViewModel>>(trips);
+
+            return Json(results);
         }
 
         [HttpPost]
@@ -34,6 +39,7 @@ namespace TheWorld.Controllers.Api
             }
 
             var newTrip = Mapper.Map<Trip>(vm);
+            newTrip.UserName = User.Identity.Name;
             repo.AddTrip(newTrip);
 
             if (repo.SaveAll())
